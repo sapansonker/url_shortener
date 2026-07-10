@@ -110,7 +110,17 @@
     <div class="member-card">
         <div class="member-title-row">
             <h3>Generated Short URLs</h3>
-            <span style="color:#475569;">Showing {{ $urls->count() }} of {{ $urls->total() }} URLs</span>
+            <div style="display:flex; gap:0.75rem; align-items:center;">
+                <form method="GET" action="{{ route('member.dashboard') }}" style="display:flex; gap:0.5rem; align-items:center;">
+                    <select name="date_range" style="padding:0.5rem 0.75rem; border:1px solid #d1d5db; border-radius:0.5rem;">
+                        <option value="">All time</option>
+                        <option value="today" {{ ($dateRange ?? '') === 'today' ? 'selected' : '' }}>Today</option>
+                        <option value="last_week" {{ ($dateRange ?? '') === 'last_week' ? 'selected' : '' }}>Last week</option>
+                        <option value="last_month" {{ ($dateRange ?? '') === 'last_month' ? 'selected' : '' }}>Last month</option>
+                    </select>
+                    <button type="submit" class="btn-primary">Filter</button>
+                </form>
+            </div>
         </div>
 
         <div class="urls-table-wrapper">
@@ -119,30 +129,29 @@
                     <th>Short URL</th>
                     <th>Original URL</th>
                     <th>Hits</th>
+                    <th>Created On</th>
                 </tr>
 
                 @forelse($urls as $url)
-                    <tr>
-                        <td>
-                            <a href="{{ route('urls.redirect', $url->short_code) }}" target="_blank">
-                                {{ url('/s/'.$url->short_code) }}
-                            </a>
-                        </td>
-                        <td>{{ $url->original_url }}</td>
-                        <td>{{ $url->hits }}</td>
-                    </tr>
+                <tr>
+                    <td>
+                        <a href="{{ route('urls.redirect', $url->short_code) }}" target="_blank">
+                            {{ url('/s/'.$url->short_code) }}
+                        </a>
+                    </td>
+                    <td>{{ $url->original_url }}</td>
+                    <td>{{ $url->hits }}</td>
+                    <td>{{ $url->created_at->format('Y-m-d H:i:s') }}</td>
+                </tr>
                 @empty
-                    <tr>
-                        <td colspan="3">No URLs Found</td>
-                    </tr>
+                <tr>
+                    <td colspan="3">No URLs Found</td>
+                </tr>
                 @endforelse
             </table>
         </div>
 
         <div class="table-footer">
-            <div>
-                Showing {{ $urls->count() }} of {{ $urls->total() }} URLs
-            </div>
             <div>{{ $urls->links() }}</div>
         </div>
     </div>

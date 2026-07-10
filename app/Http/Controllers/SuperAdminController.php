@@ -9,11 +9,14 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\ShortUrl;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class SuperAdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
+        $dateRange = $request->query('date_range');
+
         $companies = Company::select(
                 'companies.*'
             )
@@ -39,10 +42,19 @@ class SuperAdminController extends Controller
                 'short_urls.*',
                 'companies.name as company_name'
             )
-            ->latest('short_urls.created_at')
-            ->get();
+            ->latest('short_urls.created_at');
 
-        return view('superadmin.dashboard', compact('companies', 'urls'));
+        if ($dateRange === 'today') {
+            $urls->whereDate('short_urls.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+
+        $urls = $urls->get();
+
+        return view('superadmin.dashboard', compact('companies', 'urls', 'dateRange'));
     }
 
     public function createCompany()
@@ -87,8 +99,10 @@ class SuperAdminController extends Controller
             ->with('success', $message);
     }
 
-    public function companies()
+    public function companies(Request $request)
     {
+        $dateRange = $request->query('date_range');
+
         $companies = Company::select(
                 'companies.*'
             )
@@ -106,22 +120,42 @@ class SuperAdminController extends Controller
                 $query->from('short_urls')
                     ->selectRaw('COALESCE(SUM(hits), 0)')
                     ->whereColumn('short_urls.company_id', 'companies.cid');
-            }, 'total_hits')
-            ->paginate(2);
+            }, 'total_hits');
 
-        return view('superadmin.companies', compact('companies'));
+        if ($dateRange === 'today') {
+            $companies->whereDate('companies.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $companies->whereBetween('companies.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $companies->whereBetween('companies.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+
+        $companies = $companies->paginate(2)->withQueryString();
+
+        return view('superadmin.companies', compact('companies', 'dateRange'));
     }
 
-    public function urls()
+    public function urls(Request $request)
     {
+        $dateRange = $request->query('date_range');
+
         $urls = ShortUrl::join('companies', 'short_urls.company_id', '=', 'companies.cid')
             ->select(
                 'short_urls.*',
                 'companies.name as company_name'
             )
-            ->latest('short_urls.created_at')
-            ->paginate(2);
+            ->latest('short_urls.created_at');
 
-        return view('superadmin.urls', compact('urls'));
+        if ($dateRange === 'today') {
+            $urls->whereDate('short_urls.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+
+        $urls = $urls->paginate(2)->withQueryString();
+
+        return view('superadmin.urls', compact('urls', 'dateRange'));
     }
 }

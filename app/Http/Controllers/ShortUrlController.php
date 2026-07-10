@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ShortUrl;
 use App\Enums\UserRole;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ShortUrlController extends Controller
@@ -59,8 +60,9 @@ class ShortUrlController extends Controller
         return redirect()->away($url->original_url);
     }
 
-    public function download(): StreamedResponse
+    public function download(Request $request): StreamedResponse
     {
+        $dateRange = $request->query('date_range');
         $query = ShortUrl::query();
 
         if (auth()->user()->role === UserRole::ADMIN->value) {
@@ -87,6 +89,14 @@ class ShortUrlController extends Controller
                     'short_urls.*',
                     'users.name as user_name'
                 );
+        }
+
+        if ($dateRange === 'today') {
+            $query->whereDate('short_urls.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $query->whereBetween('short_urls.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $query->whereBetween('short_urls.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
         }
 
         $urls = $query->get();

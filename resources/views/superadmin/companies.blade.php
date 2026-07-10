@@ -36,7 +36,18 @@
             <h3 class="companies-heading">All Clients</h3>
             <p class="companies-subtitle">Showing {{ $companies->firstItem() ?? 0 }} to {{ $companies->lastItem() ?? 0 }} of {{ $companies->total() }} clients</p>
         </div>
-        <a class="back-button" href="{{ route('superadmin.dashboard') }}">Back to Dashboard</a>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+            <form method="GET" action="{{ route('superadmin.companies') }}" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                <select name="date_range" style="padding:0.85rem 1rem; border:1px solid #d1d5db; border-radius:0.75rem; background:#ffffff; color:#111827; font-weight:600; min-width:160px;">
+                    <option value="">All time</option>
+                    <option value="today" {{ ($dateRange ?? '') === 'today' ? 'selected' : '' }}>Today</option>
+                    <option value="last_week" {{ ($dateRange ?? '') === 'last_week' ? 'selected' : '' }}>Last week</option>
+                    <option value="last_month" {{ ($dateRange ?? '') === 'last_month' ? 'selected' : '' }}>Last month</option>
+                </select>
+                <button type="submit" class="back-button">Filter</button>
+            </form>
+            <a class="back-button" href="{{ route('superadmin.dashboard') }}">Back to Dashboard</a>
+        </div>
     </div>
 
     <div class="table-wrapper">

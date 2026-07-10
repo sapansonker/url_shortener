@@ -29,7 +29,7 @@
     }
 
     .form-label { display:block; margin-bottom:0.35rem; font-weight:600; color:#111827; }
-    .form-input { width:100%; padding:0.95rem 1rem; border:1px solid #d1d5db; border-radius:0.75rem; font-size:0.98rem; }
+    .form-input { width:90%; padding:0.95rem 1rem; border:1px solid #d1d5db; border-radius:0.75rem; font-size:0.98rem; }
     .form-input:focus { outline:none; border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
 
     .form-actions { display:grid; gap:0.75rem; margin-top:1.25rem; }

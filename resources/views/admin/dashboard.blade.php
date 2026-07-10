@@ -132,9 +132,18 @@
         <div>
             <h3 class="dashboard-heading">Generated Short URLs</h3>
         </div>
-        <div>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+            <form method="GET" action="{{ route('admin.dashboard') }}" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                <select name="date_range" class="dashboard-input" style="max-width:220px;">
+                    <option value="">All time</option>
+                    <option value="today" {{ ($dateRange ?? '') === 'today' ? 'selected' : '' }}>Today</option>
+                    <option value="last_week" {{ ($dateRange ?? '') === 'last_week' ? 'selected' : '' }}>Last week</option>
+                    <option value="last_month" {{ ($dateRange ?? '') === 'last_month' ? 'selected' : '' }}>Last month</option>
+                </select>
+                <button type="submit" class="dashboard-button">Filter</button>
+            </form>
             <button class="dashboard-button" onclick="window.location.href='{{ route('admin.urls.create') }}'">Generate</button>
-            <button class="dashboard-button" onclick="window.location.href='{{ route('urls.download') }}'">Download</button>
+            <button class="dashboard-button" onclick="window.location.href='{{ route('urls.download', ['date_range' => $dateRange ?? '']) }}'">Download</button>
         </div>
     </div>
 
@@ -169,7 +178,7 @@
     </table>
 
     <div class="dashboard-summary">
-        <span>Showing {{ min(2, $urls->count()) }} of {{ $urls->count() }} records</span>
+        <span>Showing {{ min(2, $urls->count()) }} of {{ $urls->count() }} urls</span>
         @if($urls->count() > 2)
             <a class="dashboard-action-link" href="{{ route('admin.urls') }}">View All</a>
         @endif

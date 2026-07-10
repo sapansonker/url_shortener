@@ -21,7 +21,19 @@
             <h3 class="urls-heading">All Generated Short URLs</h3>
             <p class="companies-subtitle">Showing {{ $urls->firstItem() ?? 0 }} to {{ $urls->lastItem() ?? 0 }} of {{ $urls->total() }} results</p>
         </div>
-        <a class="back-button" href="{{ route('superadmin.dashboard') }}">Back to Dashboard</a>
+        <div style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+            <form method="GET" action="{{ route('superadmin.urls') }}" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center;">
+                <select name="date_range" style="padding:0.85rem 1rem; border:1px solid #d1d5db; border-radius:0.75rem; background:#ffffff; color:#111827; font-weight:600; min-width:160px;">
+                    <option value="">All time</option>
+                    <option value="today" {{ ($dateRange ?? '') === 'today' ? 'selected' : '' }}>Today</option>
+                    <option value="last_week" {{ ($dateRange ?? '') === 'last_week' ? 'selected' : '' }}>Last week</option>
+                    <option value="last_month" {{ ($dateRange ?? '') === 'last_month' ? 'selected' : '' }}>Last month</option>
+                </select>
+                <button type="submit" class="back-button">Filter</button>
+            </form>
+            <!-- <a class="back-button" href="{{ route('urls.download', ['date_range' => $dateRange ?? '']) }}">Download</a> -->
+            <a class="back-button" href="{{ route('superadmin.dashboard', ['date_range' => $dateRange ?? '']) }}">Back to Dashboard</a>
+        </div>
     </div>
 
     <div class="table-wrapper">

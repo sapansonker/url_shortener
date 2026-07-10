@@ -8,11 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Models\ShortUrl;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
+        $dateRange = $request->query('date_range');
         $members = User::where('users.company_id', auth()->user()->company_id)
             ->leftJoin('short_urls', 'users.id', '=', 'short_urls.user_id')
             ->select(
@@ -38,13 +40,24 @@ class AdminController extends Controller
                 'users.name as user_name'
             )
             ->latest('short_urls.created_at')
-            ->get();
+            ;
 
-        return view('admin.dashboard', compact('members', 'urls'));
+        if ($dateRange === 'today') {
+            $urls->whereDate('short_urls.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+
+        $urls = $urls->get();
+
+        return view('admin.dashboard', compact('members', 'urls', 'dateRange'));
     }
 
-    public function urls()
+    public function urls(Request $request)
     {
+        $dateRange = $request->query('date_range');
         $urls = ShortUrl::where('short_urls.company_id', auth()->user()->company_id)
             ->join('users', 'short_urls.user_id', '=', 'users.id')
             ->select(
@@ -52,9 +65,19 @@ class AdminController extends Controller
                 'users.name as user_name'
             )
             ->latest('short_urls.created_at')
-            ->paginate(2);
+            ;
 
-        return view('admin.urls', compact('urls'));
+        if ($dateRange === 'today') {
+            $urls->whereDate('short_urls.created_at', Carbon::today());
+        } elseif ($dateRange === 'last_week') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subWeek()->startOfDay(), Carbon::now()->endOfDay()]);
+        } elseif ($dateRange === 'last_month') {
+            $urls->whereBetween('short_urls.created_at', [Carbon::now()->subMonth()->startOfDay(), Carbon::now()->endOfDay()]);
+        }
+
+        $urls = $urls->paginate(2)->withQueryString();
+
+        return view('admin.urls', compact('urls', 'dateRange'));
     }
 
     public function createUrl()
