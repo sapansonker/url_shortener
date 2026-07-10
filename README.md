@@ -54,6 +54,91 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+## Project README
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+A Laravel-based multi-tenant URL shortener with role-based access, client invitations, and CSV export.
+
+## Features
+
+- Multi-role access: `super_admin`, `admin`, `member`
+- Super admin invitation flow via email
+- Company and URL management
+- Short URL generation and redirect tracking
+- CSV URL export for admins and super admins
+
+## Requirements
+
+- PHP ^8.2
+- Composer
+- MySQL
+- Node.js + npm
+- Gmail App Password for SMTP
+
+## Setup
+
+```bash
+git clone <repo-url> url_shortener
+cd url_shortener
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+```
+
+## Environment
+
+Update `.env` with your database credentials and mail settings.
+
+### Gmail SMTP example
+
+```dotenv
+MAIL_MAILER=smtp
+MAIL_SCHEME=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD="your-app-password"
+MAIL_FROM_ADDRESS="your-email@gmail.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+> Use a Gmail App Password if your account has 2FA enabled.
+
+## Database
+
+```bash
+php artisan migrate
+```
+
+## Build & Run
+
+```bash
+npm run dev
+php artisan serve
+```
+
+Open `http://localhost:8000`.
+
+## Invitation Flow
+
+1. Super admin logs in.
+2. Clicks **Invite Client**.
+3. Sends an invitation email.
+4. Client opens the invite link.
+5. Client completes registration.
+
+## Common Commands
+
+```bash
+php artisan migrate
+php artisan config:clear
+php artisan optimize:clear
+npm run dev
+npm run build
+```
+
+## Notes
+
+- If mail fails, verify Gmail SMTP details and app password.
+- For Laravel 12, `MAIL_SCHEME` must be `smtp` or `smtps`.
+- Use `php artisan optimize:clear` after changing `.env`.
