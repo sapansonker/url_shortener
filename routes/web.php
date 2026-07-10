@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
 // Super Admin
 Route::middleware('auth', 'role:super_admin')->group(function () {
     Route::get('/super-admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
+    Route::get('/super-admin/companies', [SuperAdminController::class, 'companies'])->name('superadmin.companies');
+    Route::get('/super-admin/urls', [SuperAdminController::class, 'urls'])->name('superadmin.urls');
     Route::get('/super-admin/company/create', [SuperAdminController::class, 'createCompany'])->name('company.create');
     Route::post('/super-admin/company/store', [SuperAdminController::class, 'storeCompany'])->name('company.store');
     // Route::get('/super-admin/urls/download', [ShortUrlController::class, 'superAdminDownload'])->name('urls.download');
@@ -32,6 +34,9 @@ Route::middleware('auth', 'role:super_admin')->group(function () {
 // Admin
 Route::middleware('auth', 'role:admin')->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/urls', [AdminController::class, 'urls'])->name('admin.urls');
+    Route::get('/admin/urls/create', [AdminController::class, 'createUrl'])->name('admin.urls.create');
+    Route::get('/admin/members', [AdminController::class, 'members'])->name('admin.members');
     Route::get('/admin/member/create', [AdminController::class, 'createMember'])->name('member.create');
     Route::post('/admin/member/store', [AdminController::class, 'storeMember'])->name('member.store');
 });
@@ -47,6 +52,7 @@ Route::middleware(['auth', 'role:super_admin,admin,member'])->group(function () 
 // Member
 Route::middleware('auth', 'role:member')->group(function () {
     Route::get('/member/dashboard', [MemberController::class, 'dashboard'])->name('member.dashboard');
+    Route::get('/member/urls/create', [MemberController::class, 'createUrl'])->name('member.urls.create');
 });
 
 

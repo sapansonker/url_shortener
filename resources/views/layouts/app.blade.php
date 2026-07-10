@@ -4,36 +4,115 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .app-shell {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+        }
+
+        .app-brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .app-header-info {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        .app-header-info strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        .app-header-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.65rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .app-header-button:hover {
+            background: #1d4ed8;
+        }
+
+        .app-main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 1120px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .flash-message {
+            margin: 0 0 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.85rem;
+            background: #ecfdf5;
+            border: 1px solid #d1fae5;
+            color: #166534;
+        }
+    </style>
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 <body>
+<div class="app-shell">
+    <header class="app-header">
+        <div class="app-brand">URL Shortener</div>
 
-<h2>URL Shortener</h2>
-<hr>
+        @if(auth()->check())
+            <div class="app-header-info">
+                <div>
+                    Logged in as <strong>{{ auth()->user()->name }}</strong>
+                </div>
+                <div>
+                    ({{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }})
+                </div>
+                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                    @csrf
+                    <button type="submit" class="app-header-button">Logout</button>
+                </form>
+            </div>
+        @endif
+    </header>
 
-@if(auth()->check())
+    <main class="app-main">
+        @if(session('success'))
+            <div class="flash-message">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    Logged in as:
-    <strong>{{ auth()->user()->name }}</strong>
-
-    ({{ ucfirst(str_replace('_', ' ', auth()->user()->role)) }})
-
-    <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-        @csrf
-        <button type="submit" style="float:right;">Logout</button>
-    </form>
-
-    <hr>
-
-@endif
-
-@if(session('success'))
-    <p style="color:green">
-        {{ session('success') }}
-    </p>
-@endif
-
-@yield('content')
+        @yield('content')
+    </main>
+</div>
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>

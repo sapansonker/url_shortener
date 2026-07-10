@@ -86,4 +86,42 @@ class SuperAdminController extends Controller
             ->route('superadmin.dashboard')
             ->with('success', $message);
     }
+
+    public function companies()
+    {
+        $companies = Company::select(
+                'companies.*'
+            )
+            ->selectSub(function ($query) {
+                $query->from('users')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('users.company_id', 'companies.cid');
+            }, 'total_users')
+            ->selectSub(function ($query) {
+                $query->from('short_urls')
+                    ->selectRaw('COUNT(*)')
+                    ->whereColumn('short_urls.company_id', 'companies.cid');
+            }, 'total_urls')
+            ->selectSub(function ($query) {
+                $query->from('short_urls')
+                    ->selectRaw('COALESCE(SUM(hits), 0)')
+                    ->whereColumn('short_urls.company_id', 'companies.cid');
+            }, 'total_hits')
+            ->paginate(2);
+
+        return view('superadmin.companies', compact('companies'));
+    }
+
+    public function urls()
+    {
+        $urls = ShortUrl::join('companies', 'short_urls.company_id', '=', 'companies.cid')
+            ->select(
+                'short_urls.*',
+                'companies.name as company_name'
+            )
+            ->latest('short_urls.created_at')
+            ->paginate(2);
+
+        return view('superadmin.urls', compact('urls'));
+    }
 }

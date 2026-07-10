@@ -11,8 +11,13 @@ class MemberController extends Controller
     {
         $urls = ShortUrl::where('user_id', auth()->id())
             ->latest()
-            ->get();
+            ->paginate(2);
 
         return view('member.dashboard', compact('urls'));
+    }
+
+    public function createUrl()
+    {
+        return view('member.create-url');
     }
 }
