@@ -62,6 +62,7 @@ php artisan db:seed
 
 ```bash
 php artisan serve
+npm run dev
 ```
 
 Open `http://localhost:8000`.
