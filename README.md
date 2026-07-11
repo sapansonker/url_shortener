@@ -27,6 +27,7 @@ git clone https://github.com/sapansonker/url_shortener.git
 cd url_shortener
 composer install
 npm install
+php artisan key:generate
 cp .env.example .env
 ```
 ## Super Admin Credentials
