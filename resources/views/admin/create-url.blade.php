@@ -39,7 +39,7 @@
     .create-url-input,
     .create-url-button,
     .create-url-back {
-        width: 100%;
+        width: 90%;
         border-radius: 0.75rem;
         font-weight: 600;
     }

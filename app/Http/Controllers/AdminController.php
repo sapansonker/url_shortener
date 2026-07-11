@@ -16,6 +16,7 @@ class AdminController extends Controller
     {
         $dateRange = $request->query('date_range');
         $members = User::where('users.company_id', auth()->user()->company_id)
+            ->where('users.created_by', auth()->id())
             ->leftJoin('short_urls', 'users.id', '=', 'short_urls.user_id')
             ->select(
                 'users.id',
@@ -88,6 +89,7 @@ class AdminController extends Controller
     public function members()
     {
         $members = User::where('users.company_id', auth()->user()->company_id)
+            ->where('users.created_by', auth()->id())
             ->leftJoin('short_urls', 'users.id', '=', 'short_urls.user_id')
             ->select(
                 'users.id',
@@ -124,6 +126,7 @@ class AdminController extends Controller
 
         $user = new User();
         $user->company_id = auth()->user()->company_id;
+        $user->created_by = auth()->id();
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
