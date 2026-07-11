@@ -29,6 +29,10 @@ composer install
 npm install
 cp .env.example .env
 ```
+## Super Admin Credentials
+
+- email: superadmin@admin.com 
+- password: Admin@123
 
 ## Environment
 
