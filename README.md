@@ -33,7 +33,7 @@ cp .env.example .env
 ## Environment
 
 Update `.env` with your database credentials.
-Create database name url_shortener
+Create database name url_shortener.
 
 ### Database example
 
