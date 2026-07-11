@@ -101,7 +101,7 @@
         <div class="member-title-row">
             <div>
                 <h2>Member Dashboard</h2>
-                <p style="margin:0; color:#475569;">Manage and quickly generate short URLs.</p>
+                <p style="margin:0; color:#475569;">Manage & generate short URLs.</p>
             </div>
             <a class="btn-primary" href="{{ route('member.urls.create') }}">Generate</a>
         </div>

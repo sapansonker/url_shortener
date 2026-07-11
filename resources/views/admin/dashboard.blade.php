@@ -185,6 +185,7 @@
     </div>
 </div>
 
+<br>
 <div class="dashboard-section">
     <hr>
     <div class="dashboard-section-header">

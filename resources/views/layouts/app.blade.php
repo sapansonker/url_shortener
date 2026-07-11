@@ -80,12 +80,11 @@
             color: #166534;
         }
     </style>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 </head>
 <body>
 <div class="app-shell">
     <header class="app-header">
-        <div class="app-brand">URL Shortener</div>
+        <div class="app-brand">URL Shortener <span style="color: #801900;">(Sembark)</span></div>
 
         @if(auth()->check())
             <div class="app-header-info">
@@ -114,6 +113,5 @@
     </main>
 </div>
 
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script> -->
 </body>
 </html>
